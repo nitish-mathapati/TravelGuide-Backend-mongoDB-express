@@ -35,7 +35,7 @@ app.post('/city/addcity', async function (req,res) {
 // Read all
 app.get('/city/getcity', async function (req,res) {
     try {
-        const data = await city.find().select('city_name state pincode -_id');
+        const data = await city.find();
         return res.json({
             data,
             message: "All cities details"
@@ -50,7 +50,7 @@ app.get('/city/getcitybyname/:city_name', async function(req,res) {
     try {
         const cityName = req.params.city_name;
 
-        const data = await city.find({city_name:cityName}).select('city_name state pincode -_id');
+        const data = await city.find({city_name:cityName});
         if (data.length == 0){
             return res.status(400).json({message: "This city is not preset in the database."});
         }
@@ -81,7 +81,7 @@ app.put('/city/updatecitybyname/:city_name',async function (req,res) {
             { new:true }
         );
 
-        const data = await city.find({city_name:city_name}).select('city_name state pincode -_id');
+        const data = await city.find({city_name:city_name});
         return res.status(200).json({data:data});
 
     } catch (error) {
