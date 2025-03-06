@@ -30,7 +30,7 @@ exports.getfood = async (req,res) => {
     try {
         
         const id = req.params.cityId;
-        const food = await Food.find({cityId: id}).select('food description');
+        const food = await Food.find({cityId: id}).select('food description -_id');
 
         res.status(200).json({food});
         console.log("These are the food items of particular city");

@@ -25,3 +25,18 @@ exports.addPlace = async (req,res) => {
         console.log(error);
     }
 };
+
+// Get all places of particular city
+exports.getPlace = async (req,res) => {
+    try {
+        
+        const id = req.params.cityId;
+        const place = await Places.find({cityId: id}).select('locationName description time -_id');
+
+        res.status(200).send({place});
+        console.log("These are the places to visit in this city");
+
+    } catch (error) {
+        res.status(500).send("Did not fetch places of city",error);
+    }
+}

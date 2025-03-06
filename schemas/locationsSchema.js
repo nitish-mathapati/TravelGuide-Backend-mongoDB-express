@@ -21,8 +21,7 @@ const locationschema = new mongoose.Schema({
         default: Date.now
     },
     newDate: {
-        type: Date,
-        default: Date.now
+        type: String
     }
 
 })
