@@ -56,7 +56,7 @@ exports.addReview = async (req,res) => {
 exports.getReview = async (req,res) => {
     try {
         const id = req.params.cityId;
-        const reviews = await Reviews.find({cityId: id});
+        const reviews = await Reviews.find({cityId: id}).select('starRating review reviewer');
 
         res.status(200).json({reviews});
         console.log("It is fetched review \nPlease give some time to add your review 📚📃")
