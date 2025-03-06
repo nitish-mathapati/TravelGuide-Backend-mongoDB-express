@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const { swaggerDocs } = require('./swagger');
 const { addReview, getReview } = require('./controllers/reviewcontroller');
 const { addfood, getfood } = require('./controllers/foodcontroller');
+const { addPlace } = require('./controllers/locationscontroller');
 require('./controllers/reviewcontroller');
 
 app.use(express.json());
@@ -113,6 +114,9 @@ app.post('/city/addFood', addfood);
 
 // Route to fetch the food of a particular city
 app.get('/city/food/:cityId', getfood);
+
+// Route to add the place of a particular city
+app.post('/city/addPlace', addPlace);
 
 app.use('/api_docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

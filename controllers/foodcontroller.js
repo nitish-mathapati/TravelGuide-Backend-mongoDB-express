@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 // Add a food items of particular city
 exports.addfood = async (req,res) => {
-
+    
     try {
         
         const { cityId, food, description } = req.body;
@@ -20,8 +20,7 @@ exports.addfood = async (req,res) => {
         res.send("Successfully added the food")
 
     } catch (error) {
-        console.log(error);
-        res.status(500).send("Did not add food details")
+        res.status(500).send("Did not add food details",error)
     }
 
 };
