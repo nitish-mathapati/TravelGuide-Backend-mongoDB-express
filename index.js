@@ -9,24 +9,48 @@ const { addReview, getReview } = require('./controllers/reviewcontroller');
 const { addfood, getfood } = require('./controllers/foodcontroller');
 const { addPlace, getPlace } = require('./controllers/locationscontroller');
 require('./controllers/reviewcontroller');
+const fs = require('fs');
+const path = require('path');
 
+// Middlewares
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
-// Middleware to parse incoming JSON requests
-// app.use(bodyParser.json());
+app.set('view engine','ejs');
+app.use(express.static(path.join(__dirname,'public')));
+
+app.use((req,res,next)=>{
+    console.log("This is 1st Middleware");
+    fs.appendFile('log.txt',
+        `\n "Date"=${Date.now()}\t"IP"=${req.ip}\t"Method"=${req.method}\t"API"=${req.path} \t"Params"=${req.params}`,
+        (err,data)=>{
+            next();
+        }
+    )
+})
+
+app.use('/city',(req,res,next)=>{
+    console.log("This is 2nd Middleware");
+    next();
+})
 
 // Test server
-app.get('/city',function(req,res){
+app.get('/home',function(req,res){
     res.send("Hey hi..! welcome to my city server");
 });
 
+app.get('/addcity', (req,res)=>{
+    res.render('addcity');
+})
+
 // CRUD operation
 // Create
-app.post('/city/addcity', async function (req,res) {
+app.post('/city/addcity', async function (req,res) {    
     try {
         const data = req.body;
         await city.create(data);
-        res.send("Successfully added to database");
+        res.redirect('/addcity');
+        console.log("Successfully added to database");
     } catch (error) {
         res.send("Oopss..! Something went wrong")
         return res.send(error);
@@ -71,7 +95,6 @@ app.put('/city/updatecitybyname/:city_name',async function (req,res) {
     // console.log(newcity);
 
     const { city_name, state, pincode } = req.body;
-
     try {
         // await city.updateOne({city_name:cityName},{$set:{city_name:newcity, pincode:newpin}});
         // const city_name = newcity;
