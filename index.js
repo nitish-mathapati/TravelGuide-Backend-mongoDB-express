@@ -35,11 +35,11 @@ app.use('/city',(req,res,next)=>{
 })
 
 // Test server
-app.get('/home',function(req,res){
+app.get('/test',function(req,res){
     res.send("Hey hi..! welcome to my city server");
 });
 
-app.get('/addcity', (req,res)=>{
+app.get('/city', (req,res)=>{
     res.render('addcity');
 })
 

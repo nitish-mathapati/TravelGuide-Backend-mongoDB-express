@@ -25,7 +25,7 @@ exports.addReview = async (req,res) => {
         // Update the city's average rating
         // await updateAvgRating(cityId);
 
-        res.redirect("/addcity");
+        res.redirect("/home");
         console.log("Review added successfully. Thankyou :) for your valuable time 😁")
 
     } catch (error) {
