@@ -94,8 +94,8 @@ app.put('/city/updatecitybyname/:city_name',async function (req,res) {
     // const newpin = req.body.pincode;
     // console.log(newcity);
 
-    const { city_name, state, pincode } = req.body;
     try {
+        const { city_name, state, pincode } = req.body;
         // await city.updateOne({city_name:cityName},{$set:{city_name:newcity, pincode:newpin}});
         // const city_name = newcity;
 
