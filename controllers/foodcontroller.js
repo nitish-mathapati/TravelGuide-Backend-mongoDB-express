@@ -17,10 +17,12 @@ exports.addfood = async (req,res) => {
         newFood.newDate = newFood.Date.toLocaleString();
         await newFood.save();
 
-        res.send("Successfully added the food")
+        console.log("Successfully added the food")
+        res.render('addlocation');
 
     } catch (error) {
-        res.status(500).send("Did not add food details",error)
+        console.log(error);
+        res.send("Did not add food details")
     }
 
 };
@@ -36,7 +38,7 @@ exports.getfood = async (req,res) => {
         console.log("These are the food items of particular city");
 
     } catch (error) {
-        res.status(500).send("Did not fetch food items",error)
-        // console.log(error);
+        console.log(error);
+        res.send("Did not fetch food items",error)
     }
 }

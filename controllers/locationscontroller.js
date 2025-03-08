@@ -18,7 +18,8 @@ exports.addPlace = async (req,res) => {
         newPlace.newDate = newPlace.Date.toLocaleString();
         await newPlace.save();
 
-        res.send("Successfully added the place");
+        res.render("addreview");
+        console.log("Successfully added the place")
 
     } catch (error) {
         res.status(500).send("Did not add place details");

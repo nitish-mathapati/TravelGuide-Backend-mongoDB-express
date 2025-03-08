@@ -25,11 +25,12 @@ exports.addReview = async (req,res) => {
         // Update the city's average rating
         // await updateAvgRating(cityId);
 
-        res.send("Review added successfully. Thankyou :) for your valuable time 😁")
+        res.redirect("/addcity");
+        console.log("Review added successfully. Thankyou :) for your valuable time 😁")
 
     } catch (error) {
-        res.status(500).send("Review did not added 😕😔. Try again....!!",error);
-        // console.log(error)
+        console.log(error)
+        res.send("Review did not added 😕😔. Try again....!!");
     }
 };
 
@@ -63,7 +64,7 @@ exports.getReview = async (req,res) => {
 
 
     } catch (error) {
-        // console.log(error)
-        res.status(500).send("Couldnot fetch the review 😕😔. Try again....!!",error);
+        console.log(error)
+        res.send("Couldnot fetch the review 😕😔. Try again....!!");
     }
 }

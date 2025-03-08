@@ -49,8 +49,8 @@ app.post('/city/addcity', async function (req,res) {
     try {
         const data = req.body;
         await city.create(data);
-        res.redirect('/addcity');
-        console.log("Successfully added to database");
+        console.log("Successfully added city to database");
+        res.render('addfood');
     } catch (error) {
         res.send("Oopss..! Something went wrong")
         return res.send(error);
@@ -77,13 +77,13 @@ app.get('/city/getcitybyname/:city_name', async function(req,res) {
 
         const data = await city.find({city_name:cityName}).select('city_name state pincode -_id');
         if (data.length == 0){
-            return res.status(400).json({message: "This city is not preset in the database."});
+            return res.json({message: "This city is not preset in the database."});
         }
-        return res.status(200).json({success: true, data});
+        return res.json({data});
 
     } catch (error) {
-        res.send("Error in fetching the data from database");
-        return res.status(400).send(error)
+        console.log(error)
+        return res.send("Error in fetching the data from database")
     }
 });
 
@@ -106,7 +106,7 @@ app.put('/city/updatecitybyname/:city_name',async function (req,res) {
         );
 
         const data = await city.find({city_name:city_name}).select('city_name state pincode -_id');
-        return res.status(200).json({data:data});
+        return res.json({data:data});
 
     } catch (error) {
         console.log(error)
@@ -121,8 +121,8 @@ app.delete('/city/deletebyname/:city_name', async function (req,res) {
         await city.deleteOne({city_name:cityName});
         res.status(200).send("Successfully deleted city from database");
     } catch (error) {
-        res.send("Error in database to delete");
-        return res.status(400).send(error)
+        console.log(error);
+        return res.send("Error in database to delete")
     }
 })
 

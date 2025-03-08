@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADD PLACES</title>
+    <link rel="stylesheet" href="/style.css"> // Linking to CSS file
+</head>
+<body>
+    <h1>ADD PLACES</h1>
+    <form method="post" action="/city/addPlace">
+        <div>
+            <h3>CityID</h3>
+            <input type="text" id="CityId" name="cityId" required>
+        </div>
+        <div>
+            <h3>Place</h3>
+            <input type="text" id="Place" name="locationName" required>
+        </div>
+        <div>
+            <h3>Description</h3>
+            <input type="text" id="Description" name="description" required>
+        </div>
+        <div>
+            <h3>Time(minutes)</h3>
+            <input type="text" id="Time" name="time" required>
+        </div>
+        <button type="submit">SUBMIT</button> // Linking to JS file
+    </form>
+    <script src="/script.js"></script>
+</body>
+</html>
