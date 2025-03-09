@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 const city = require('./schemas/cityschema');
+const User = require('./schemas/userschema');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerDocs } = require('./swagger');
 const { addReview, getReview } = require('./controllers/reviewcontroller');
@@ -11,10 +12,16 @@ const { addPlace, getPlace } = require('./controllers/locationscontroller');
 require('./controllers/reviewcontroller');
 const fs = require('fs');
 const path = require('path');
+const { render } = require('ejs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const { resourceLimits } = require('worker_threads');
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
 
 app.set('view engine','ejs');
 app.use(express.static(path.join(__dirname,'public')));
@@ -38,6 +45,66 @@ app.use('/city',(req,res,next)=>{
 app.get('/test',function(req,res){
     res.send("Hey hi..! welcome to my city server");
 });
+
+// Creating siginip-login-logout
+app.get('/', (req,res)=>{
+    res.render('home');
+});
+
+// Signup
+app.get('/signup',(req,res)=>{
+    res.render('signup');
+});
+
+app.post('/signup',(req,res)=>{
+    
+    try {
+        const { username, email, password, age } = req.body;
+
+        // Hashing the password
+        bcrypt.genSalt(10, (err,salt)=>{
+            bcrypt.hash(password, salt, async (req,hash)=>{
+                const createdUser = await User.create({
+                    username,
+                    email,
+                    password:hash,
+                    age
+                })
+                const token = jwt.sign({email}, "balleballe");
+                res.cookie("token", token);
+
+                res.redirect('/login');
+            })
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// Login
+app.get('/login', (req,res)=>{
+    res.render('login');
+})
+
+app.post('/login',async(req,res)=>{
+    const user = await User.findOne({email: req.body.email});
+    if(!user) return res.send("Something went wrong");
+
+    bcrypt.compare(req.body.password, user.password, (err,result)=>{
+        if(result){
+            const token = jwt.sign({email:user.email}, "balleballe");
+            res.cookie("token", token);
+            res.render('panel');
+        }
+        else res.send("Something went wrong");
+    })
+})
+
+// Logout
+app.get('/logout', (req,res)=>{
+    res.cookie("token", "");
+    res.redirect('/');
+})
 
 app.get('/city', (req,res)=>{
     res.render('addcity');
