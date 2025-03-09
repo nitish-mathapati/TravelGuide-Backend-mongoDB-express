@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const city = require('./schemas/cityschema');
 const User = require('./schemas/userschema');
+const oneDayTravel = require('./controllers/onedaytrip');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerDocs } = require('./swagger');
 const { addReview, getReview } = require('./controllers/reviewcontroller');
@@ -137,6 +138,16 @@ app.get('/city/getcity', async function (req,res) {
         return res.send(error);
     }
 });
+
+// oneDayTravel
+app.get('/city/oneDayTravel', async(req,res)=>{
+    try {
+        const data = oneDayTravel();
+        res.render('onedaytrip',{data:data});
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 // Read by name
 app.get('/city/getcitybyname/:city_name', async function(req,res) {
