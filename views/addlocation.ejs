@@ -7,26 +7,30 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>ADD PLACES</h1>
-    <form method="post" action="/city/addPlace">
-        <div>
-            <h3>CityID</h3>
-            <input type="text" id="CityId" name="cityId" required>
+    <div class="container w-full h-screen bg-zinc-900 text-white p-10">
+        <div class="box">
+            <h2>ADD PLACE</h2>
+            <form method="post" action="/city/addPlace">
+                <div>
+                    <h3>CityID</h3>
+                    <input type="text" id="CityId" name="cityId" required>
+                </div>
+                <div>
+                    <h3>Place</h3>
+                    <input type="text" id="Place" name="locationName" required>
+                </div>
+                <div>
+                    <h3>Description</h3>
+                    <input type="text" id="Description" name="description" required>
+                </div>
+                <div>
+                    <h3>Time(minutes)</h3>
+                    <input type="text" id="Time" name="time" required>
+                </div>
+                <button type="submit">SUBMIT</button>
+            </form>
         </div>
-        <div>
-            <h3>Place</h3>
-            <input type="text" id="Place" name="locationName" required>
-        </div>
-        <div>
-            <h3>Description</h3>
-            <input type="text" id="Description" name="description" required>
-        </div>
-        <div>
-            <h3>Time(minutes)</h3>
-            <input type="text" id="Time" name="time" required>
-        </div>
-        <button type="submit">SUBMIT</button>
-    </form>
+    </div>
     <script src="/script.js"></script>
 </body>
 </html>

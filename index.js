@@ -128,10 +128,11 @@ app.post('/city/addcity', async function (req,res) {
 app.get('/city/getcity', async function (req,res) {
     try {
         const data = await city.find().select('city_name state pincode -_id');
-        return res.json({
-            data,
-            message: "All cities details"
-        })
+        // return res.json({
+        //     data,
+        //     message: "All cities details"
+        // })
+        res.render('readcity',{data:data});
     } catch (error) {
         return res.send(error);
     }

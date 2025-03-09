@@ -7,22 +7,26 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>ADD FOOD</h1>
-    <form method="post" action="/city/addFood">
-        <div>
-            <h3>CityID</h3>
-            <input type="text" id="CityId" name="cityId" required>
+    <div class="container w-full h-screen bg-zinc-900 text-white p-10">
+        <div class="box">
+            <h2>ADD FOOD</h2>
+            <form method="post" action="/city/addFood">
+                <div>
+                    <h3>CityID</h3>
+                    <input type="text" id="CityId" name="cityId" required>
+                </div>
+                <div>
+                    <h3>Food</h3>
+                    <input type="text" id="Food" name="food" required>
+                </div>
+                <div>
+                    <h3>Description</h3>
+                    <input type="text" id="Description" name="description" required>
+                </div>
+                <button type="submit">SUBMIT</button>
+            </form>
         </div>
-        <div>
-            <h3>Food</h3>
-            <input type="text" id="Food" name="food" required>
-        </div>
-        <div>
-            <h3>Description</h3>
-            <input type="text" id="Description" name="description" required>
-        </div>
-        <button type="submit">SUBMIT</button>
-    </form>
+    </div>
     <script src="/script.js"></script>
 </body>
 </html>
