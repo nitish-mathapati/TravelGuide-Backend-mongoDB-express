@@ -7,7 +7,32 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1>ADD CITY</h1>
+    <div class="container w-full h-screen bg-zinc-900 text-white p-10">
+        <div class="box">
+            <h2>ADD CITY</h2>
+            <form method="post" action="/city/addcity">
+                <div>
+                    <h3>City Name</h3>
+                    <input type="text" id="Name" name="city_name" required>
+                </div>
+                <div>
+                    <h3>City State</h3>
+                    <input type="text" id="State" name="state" required>
+                </div>
+                <div>
+                    <h3>City Pincode</h3>
+                    <input type="text" id="Pincode" name="pincode" required>
+                </div>
+                <button type="submit">SUBMIT</button>
+            </form>
+            <!-- <p>Please choose an option:</p> -->
+            <!-- <div class="button-group">
+                <a href="/" class="button">User</a>
+                <a href="/city" class="button">Admin</a>
+            </div> -->
+        </div>
+    </div>
+    <!-- <h1>ADD CITY</h1>
     <form method="post" action="/city/addcity">
         <div>
             <h3>City Name</h3>
@@ -22,7 +47,7 @@
             <input type="text" id="Pincode" name="pincode" required>
         </div>
         <button type="submit">SUBMIT</button>
-    </form>
+    </form> -->
     <script src="/script.js"></script>
 </body>
 </html>
