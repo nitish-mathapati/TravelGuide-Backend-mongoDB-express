@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const city = require('./schemas/cityschema');
 const User = require('./schemas/userschema');
-const oneDayTravel = require('./controllers/onedaytrip');
+const { oneDayTravel, twoDayTravel, threeDayTravel } = require('./controllers/dayPlans');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerDocs } = require('./swagger');
 const { addReview, getReview } = require('./controllers/reviewcontroller');
@@ -139,11 +139,31 @@ app.get('/city/getcity', async function (req,res) {
     }
 });
 
-// oneDayTravel
-app.get('/city/oneDayTravel', async(req,res)=>{
+// One Day Plan
+app.get('/city/onedayplan', async(req,res)=>{
     try {
         const data = oneDayTravel();
-        res.render('onedaytrip',{data:data});
+        res.render('dayplans',{ data:data});
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// Two Days Plan
+app.get('/city/twodaysplan', async(req,res)=>{
+    try {
+        const data = twoDayTravel();
+        res.render('dayplans',{ data:data});
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// Three Days Plan
+app.get('/city/threedaysplan', async(req,res)=>{
+    try {
+        const data = threeDayTravel();
+        res.render('dayplans',{ data:data});
     } catch (error) {
         console.log(error);
     }
