@@ -25,6 +25,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 app.set('view engine','ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname,'public')));
 
 app.use((req,res,next)=>{
@@ -142,8 +143,10 @@ app.get('/city/getcity', async function (req,res) {
 // One Day Plan
 app.get('/city/onedayplan', async(req,res)=>{
     try {
-        const data = oneDayTravel();
-        res.render('dayplans',{ data:data});
+        const data = await oneDayTravel();
+        console.log("The data is: ");
+        console.log(data);  
+        res.render('onedayplan',{ data:data});
     } catch (error) {
         console.log(error);
     }
@@ -152,8 +155,10 @@ app.get('/city/onedayplan', async(req,res)=>{
 // Two Days Plan
 app.get('/city/twodaysplan', async(req,res)=>{
     try {
-        const data = twoDayTravel();
-        res.render('dayplans',{ data:data});
+        const data = await twoDayTravel();
+        console.log("The data is: ");
+        console.log(data);
+        res.render('twodaysplan',{ data:data});
     } catch (error) {
         console.log(error);
     }
@@ -162,8 +167,10 @@ app.get('/city/twodaysplan', async(req,res)=>{
 // Three Days Plan
 app.get('/city/threedaysplan', async(req,res)=>{
     try {
-        const data = threeDayTravel();
-        res.render('dayplans',{ data:data});
+        const data = await threeDayTravel();
+        console.log("The data is: ");
+        console.log(data);
+        res.render('threedaysplan',{ data:data});
     } catch (error) {
         console.log(error);
     }

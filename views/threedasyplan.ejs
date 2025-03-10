@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Day City Plan</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Optional: Link to a CSS file -->
+</head>
+<body>
+    <header>
+        <h1>Three Days Plan</h1>
+    </header>
+    <main>
+        <section id="city-list">
+            <% if (data && data.length > 0) { %>
+                <% data.forEach(function(city) { %>
+                    <article>
+                        <p><strong>Place:</strong> <%= city.locationName %></p>
+                        <p><strong>Description:</strong> <%= city.description %></p>
+                        <p><strong>Time (min):</strong> <%= city.time %></p>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>No cities found.</p>
+            <% } %>
+        </section>
+    </main>
+</body>
+</html>
