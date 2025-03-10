@@ -36,12 +36,12 @@ app.use((req,res,next)=>{
             next();
         }
     )
-})
+});
 
 app.use('/city',(req,res,next)=>{
     console.log("This is 2nd Middleware");
     next();
-})
+});
 
 // Test server
 app.get('/test',function(req,res){
@@ -81,12 +81,12 @@ app.post('/signup',(req,res)=>{
     } catch (error) {
         console.log(error);
     }
-})
+});
 
 // Login
 app.get('/login', (req,res)=>{
     res.render('login');
-})
+});
 
 app.post('/login',async(req,res)=>{
     const user = await User.findOne({email: req.body.email});
@@ -100,17 +100,17 @@ app.post('/login',async(req,res)=>{
         }
         else res.send("Something went wrong");
     })
-})
+});
 
 // Logout
 app.get('/logout', (req,res)=>{
     res.cookie("token", "");
     res.redirect('/');
-})
+});
 
 app.get('/city', (req,res)=>{
     res.render('addcity');
-})
+});
 
 // CRUD operation
 // Create
@@ -254,4 +254,4 @@ app.use('/api_docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.listen(2025,()=>{
     console.log("Successfully connected to port: 2025");
-})
+});
