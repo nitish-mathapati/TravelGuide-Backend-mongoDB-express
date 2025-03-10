@@ -147,7 +147,7 @@ app.get('/city/onedayplan', async(req,res)=>{
     } catch (error) {
         console.log(error);
     }
-})
+});
 
 // Two Days Plan
 app.get('/city/twodaysplan', async(req,res)=>{
@@ -157,7 +157,7 @@ app.get('/city/twodaysplan', async(req,res)=>{
     } catch (error) {
         console.log(error);
     }
-})
+});
 
 // Three Days Plan
 app.get('/city/threedaysplan', async(req,res)=>{
@@ -167,7 +167,7 @@ app.get('/city/threedaysplan', async(req,res)=>{
     } catch (error) {
         console.log(error);
     }
-})
+});
 
 // Read by name
 app.get('/city/getcitybyname/:city_name', async function(req,res) {
