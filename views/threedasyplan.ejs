@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One Day City Plan</title>
-    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Optional: Link to a CSS file -->
+    <link rel="stylesheet" href="/path/to/your/styles.css"> 
 </head>
 <body>
     <header>
@@ -25,5 +25,79 @@
             <% } %>
         </section>
     </main>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Days City Plan</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Optional: Link to a CSS file -->
+    <style>
+        /* Basic styles for the sliding effect */
+        .details {
+            display: none; /* Initially hide the details */
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .location-name {
+            cursor: pointer; /* Change cursor to pointer for clickable items */
+            color: #0e0f0f; /* Bootstrap primary color */
+            /*text-decoration: underline; Underline to indicate it's clickable */
+            padding: 10px; /* Add padding inside the box */
+            border: 1px solid #a0b1c4; /* Border color matching the text color */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f0f8ff; /* Light background color for the box */
+            margin: 5px 0; /* Margin to separate from other elements */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .location-name:hover {
+            background-color: #e0f0ff; /* Change background color on hover */
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Three Days Plan</h1>
+    </header>
+    <main>
+        <section id="city-list">
+            <% if (data && data.length > 0) { %>
+                <% data.forEach(function(city) { %>
+                    <article>
+                        <p class="location-name" onclick="toggleDetails('<%= city.locationName %>')">
+                            <strong><%= city.locationName %></strong>
+                        </p>
+                        <div class="details" id="<%= city.locationName.replace(/\s+/g, '-') %>-details">
+                            <p><strong>Place:</strong> <%= city.locationName %></p>
+                            <p><strong>Description:</strong> <%= city.description %></p>
+                            <p><strong>Time (min):</strong> <%= city.time %></p>
+                        </div>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <p>No cities found.</p>
+            <% } %>
+        </section>
+    </main>
+
+    <script>
+        function toggleDetails(locationName) {
+            const detailsDiv = document.getElementById(locationName.replace(/\s+/g, '-') + '-details');
+            if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+                detailsDiv.style.display = 'block'; // Show the details
+            } else {
+                detailsDiv.style.display = 'none'; // Hide the details
+            }
+        }
+    </script>
 </body>
 </html>

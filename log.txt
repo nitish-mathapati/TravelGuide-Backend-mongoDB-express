@@ -293,3 +293,8 @@
  "Date"=1741587575986	"IP"=::1	"Method"=GET	"API"=/city/onedayplan 	"Params"=[object Object]
  "Date"=1741587576078	"IP"=::1	"Method"=GET	"API"=/path/to/your/styles.css 	"Params"=[object Object]
  "Date"=1741587576102	"IP"=::1	"Method"=GET	"API"=/path/to/your/styles.css 	"Params"=[object Object]
+ "Date"=1741587717247	"IP"=::1	"Method"=GET	"API"=/city/onedayplan 	"Params"=[object Object]
+ "Date"=1741587717320	"IP"=::1	"Method"=GET	"API"=/path/to/your/styles.css 	"Params"=[object Object]
+ "Date"=1741587731288	"IP"=::1	"Method"=GET	"API"=/city/twodaysplan 	"Params"=[object Object]
+ "Date"=1741587731421	"IP"=::1	"Method"=GET	"API"=/path/to/your/styles.css 	"Params"=[object Object]
+ "Date"=1741587731432	"IP"=::1	"Method"=GET	"API"=/path/to/your/styles.css 	"Params"=[object Object]
