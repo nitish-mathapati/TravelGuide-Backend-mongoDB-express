@@ -14,9 +14,61 @@
             <p>Please choose an option:</p>
             <div class="button-group">
                 <a href="/" class="button">User</a>
-                <a href="/city" class="button">Admin</a>
+                <a onclick="checkAdmin()" href="/city" class="button">Admin</a>
             </div>
         </div>
     </div>
+    <!-- <script>
+        function checkAdmin() {
+            let password;
+            while (true) {
+                password = prompt("Enter Admin Password:");
+                
+                if (password === null) {
+                    return;
+                }
+
+                if (password === "nitima") {
+                    window.location.href = "/city";
+                    break;
+                } else {
+                    alert("Incorrect password! Try again.");
+                }
+            }
+        }
+    </script> -->
+
+    <script>
+        function checkAdmin() {
+            let password = "";
+            while (password !== "nitima") {
+                password = prompt("Enter Admin Password:");
+                if (password === null) return;
+                // if (password.trim() === "") {
+                //     alert("Password cannot be empty! Try again.");
+                //     continue;
+                // }
+                if (password !== "nitima") {
+                    alert("Incorrect password! Try again.");
+                }
+            }
+            window.location.href = "/city";
+        }
+    </script>
+
+    <!-- <script>
+        function checkAdmin() {
+            let password = prompt("Enter Admin Password:");
+
+            if (password === null || password.trim() === "") {
+                location.reload();
+            } else if (password.trim() === "nitima") {
+                window.location.href = "/city";
+            } else {
+                alert("Incorrect password! Try again.");
+                location.reload();
+            }
+        }
+    </script> -->
 </body>
 </html>
