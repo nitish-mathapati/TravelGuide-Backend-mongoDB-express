@@ -18,7 +18,7 @@ exports.addPlace = async (req,res) => {
         newPlace.newDate = newPlace.Date.toLocaleString();
         await newPlace.save();
 
-        res.render("addreview");
+        res.render("admin");
         console.log("Successfully added the place")
 
     } catch (error) {

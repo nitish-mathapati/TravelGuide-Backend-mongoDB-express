@@ -18,7 +18,7 @@ exports.addfood = async (req,res) => {
         await newFood.save();
 
         console.log("Successfully added the food")
-        res.render('addlocation');
+        res.render('admin');
 
     } catch (error) {
         console.log(error);

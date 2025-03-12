@@ -49,7 +49,10 @@ app.get('/test',function(req,res){
 });
 
 // Creating siginip-login-logout
-app.get('/', (req,res)=>{
+app.get('/',(req,res)=>{
+    if(req.cookies.token){
+        return res.redirect('/panel');
+    }
     res.render('home');
 });
 
@@ -75,7 +78,7 @@ app.post('/signup',(req,res)=>{
                 const token = jwt.sign({email}, "balleballe");
                 res.cookie("token", token);
 
-                res.redirect('/login');
+                res.render('panel');
             })
         })
     } catch (error) {
@@ -89,28 +92,75 @@ app.get('/login', (req,res)=>{
 });
 
 app.post('/login',async(req,res)=>{
-    const user = await User.findOne({email: req.body.email});
-    if(!user) return res.send("Something went wrong");
 
-    bcrypt.compare(req.body.password, user.password, (err,result)=>{
-        if(result){
-            const token = jwt.sign({email:user.email}, "balleballe");
-            res.cookie("token", token);
-            res.render('panel');
+    try {
+        if(req.cookies.token){
+            return res.redirect('/panel');
         }
-        else res.send("Something went wrong");
-    })
+    
+        // To login as admin or user
+        const adminName = await User.findOne({username:"admin"});
+        if (adminName.username === "admin") {
+            bcrypt.compare(req.body.password, adminName.password, (err,result)=>{
+                if(result){
+                    const ADtoken = jwt.sign({email:adminName.email},"admin",{ expiresIn: '30m' });
+                    res.cookie("admin",ADtoken);
+                    res.redirect('/AdminPanel');
+                }
+            })
+        } else {
+            const user = await User.findOne({email: req.body.email});
+            if(!user) return res.send("Invalid email or password");
+        
+            bcrypt.compare(req.body.password, user.password, (err,result)=>{
+                if(result){
+                    const token = jwt.sign({email:user.email}, "balleballe",{ expiresIn: '1h' });
+                    res.cookie("token", token,);
+                    res.redirect('/panel');
+                }
+                else res.send("Invalid email or password");
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    
 });
 
 // Logout
 app.get('/logout', (req,res)=>{
     res.cookie("token", "");
+    // res.clearCookie("token");
     res.redirect('/');
 });
 
-app.get('/city', (req,res)=>{
+
+
+// APIs
+// Panel
+app.get('/panel',(req,res)=>{
+    res.render('panel');
+})
+
+// Admin
+app.get('/AdminPanel',(req,res)=>{
+    res.render('admin');
+});
+
+// City
+app.get('/city/addcity', (req,res)=>{
     res.render('addcity');
 });
+
+// Food
+app.get('/city/addFood', (req,res)=>{
+    res.render('addfood');
+})
+
+// Places
+app.get('/city/addPlace', (req,res)=>{
+    res.render('addlocation');
+})
 
 // CRUD operation
 // Create
@@ -119,7 +169,7 @@ app.post('/city/addcity', async function (req,res) {
         const data = req.body;
         await city.create(data);
         console.log("Successfully added city to database");
-        res.render('addfood');
+        res.render('admin');
     } catch (error) {
         res.send("Oopss..! Something went wrong")
         return res.send(error);
