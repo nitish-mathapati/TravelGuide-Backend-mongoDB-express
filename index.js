@@ -140,7 +140,7 @@ app.get('/logout', (req,res)=>{
 // Panel
 app.get('/panel',(req,res)=>{
     res.render('panel');
-})
+});
 
 // Admin
 app.get('/AdminPanel',(req,res)=>{
@@ -155,12 +155,12 @@ app.get('/city/addcity', (req,res)=>{
 // Food
 app.get('/city/addFood', (req,res)=>{
     res.render('addfood');
-})
+});
 
 // Places
 app.get('/city/addPlace', (req,res)=>{
     res.render('addlocation');
-})
+});
 
 // CRUD operation
 // Create
