@@ -305,40 +305,43 @@ app.get('/city/place/:city_name', getPlace);
 
 // Day Plans
 // One Day Plan
-app.get('/city/onedayplan', async(req,res)=>{
-    try {
-        const data = await oneDayTravel();
-        console.log("The data is: ");
-        console.log(data);  
-        res.render('onedayplan',{ data:data});
-    } catch (error) {
-        console.log(error);
-    }
-});
+app.get('/city/onedayplan/:city_name',oneDayTravel);
+// app.get('/city/onedayplan/:city_name', async(req,res)=>{
+//     try {
+//         const data = await oneDayTravel();
+//         console.log("The data is: ",data);
+//         // console.log(data);  
+//         res.render('onedayplan',{ data:data });
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 
 // Two Days Plan
-app.get('/city/twodaysplan', async(req,res)=>{
-    try {
-        const data = await twoDayTravel();
-        console.log("The data is: ");
-        console.log(data);
-        res.render('twodaysplan',{ data:data});
-    } catch (error) {
-        console.log(error);
-    }
-});
+app.get('/city/twodaysplan/:city_name',twoDayTravel);
+// app.get('/city/twodaysplan', async(req,res)=>{
+//     try {
+//         const data = await twoDayTravel();
+//         console.log("The data is: ");
+//         console.log(data);
+//         res.render('twodaysplan',{ data:data});
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 
 // Three Days Plan
-app.get('/city/threedaysplan', async(req,res)=>{
-    try {
-        const data = await threeDayTravel();
-        console.log("The data is: ");
-        console.log(data);
-        res.render('threedaysplan',{ data:data});
-    } catch (error) {
-        console.log(error);
-    }
-});
+app.get('/city/threedaysplan/:city_name',threeDayTravel);
+// app.get('/city/threedaysplan', async(req,res)=>{
+//     try {
+//         const data = await threeDayTravel();
+//         console.log("The data is: ");
+//         console.log(data);
+//         res.render('threedaysplan',{ data:data});
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
 
 app.use('/api_docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

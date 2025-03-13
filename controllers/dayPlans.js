@@ -10,8 +10,9 @@ async function oneDayTravel(req,res){
 
     try {
 
-        const allPlaces = await Places.find().sort({time:-1});
-        // console.log(allPlaces);
+        const city = req.params.city_name;
+        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
+        console.log(allPlaces);
     
         let filteredPlaces = [];
         let totalTime = 0;
@@ -23,7 +24,8 @@ async function oneDayTravel(req,res){
             }
             else{
                 console.log("Filter Places: ",filteredPlaces);
-                return filteredPlaces;
+                res.render('onedayplan',{ data:filteredPlaces });
+                // return filteredPlaces;
                 // res.render('onedaytrip',{place:filteredPlaces});
             }
         }
@@ -45,7 +47,8 @@ async function twoDayTravel(req,res){
 
     try {
 
-        const allPlaces = await Places.find().sort({time:-1});
+        const city = req.params.city_name
+        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
         // console.log(allPlaces);
     
         let filteredPlaces = [];
@@ -58,7 +61,8 @@ async function twoDayTravel(req,res){
             }
             else{
                 console.log("Filter Places: ",filteredPlaces);
-                return filteredPlaces;
+                res.render('twodaysplan',{ data:filteredPlaces });
+                // return filteredPlaces;
                 // res.render('onedaytrip',{place:filteredPlaces});
             }
         }
@@ -80,7 +84,8 @@ async function threeDayTravel(req,res){
 
     try {
 
-        const allPlaces = await Places.find().sort({time:-1});
+        const city = req.params.city_name
+        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
         // console.log(allPlaces);
     
         let filteredPlaces = [];
@@ -93,7 +98,8 @@ async function threeDayTravel(req,res){
             }
             else{
                 console.log("Filter Places: ",filteredPlaces);
-                return filteredPlaces;
+                res.render('threedaysplan',{ data:filteredPlaces });
+                // return filteredPlaces;
                 // res.render('onedaytrip',{place:filteredPlaces});
             }
         }
