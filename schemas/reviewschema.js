@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const reviewschema = new mongoose.Schema({
 
     // Reference a document from another collection.
-    cityId: { type: mongoose.Schema.Types.ObjectId},    
+    city_name: { type:String, ref:'city', required:true },    
 
     starRating: {
         type: Number,

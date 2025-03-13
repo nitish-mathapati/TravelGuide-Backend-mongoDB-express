@@ -7,13 +7,13 @@ const mongoose = require('mongoose');
 exports.addReview = async (req,res) => {
     
     try {
-        const { cityId, starRating, review, reviewer } = req.body;
+        const { city_name, starRating, review, reviewer } = req.body;
 
         //const id = mongoose.Types.ObjectId(cityId); 
         
         // Create a new Review
         const newReview = new Reviews({
-            cityId,
+            city_name,
             starRating,
             review,
             reviewer
@@ -56,8 +56,8 @@ exports.addReview = async (req,res) => {
 // Get reviews for a city
 exports.getReview = async (req,res) => {
     try {
-        const id = req.params.cityId;
-        const reviews = await Reviews.find({cityId: id}).select('starRating review reviewer -_id');
+        const id = req.params.city_name;
+        const reviews = await Reviews.find({city_name: id}).select('starRating review reviewer -_id');
 
         res.status(200).json({reviews});
         console.log("It is fetched review \nPlease give some time to add your review 📚📃")

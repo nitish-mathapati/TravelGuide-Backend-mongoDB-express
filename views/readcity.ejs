@@ -10,7 +10,7 @@
     <div id="city-list">
         <% if (data && data.length > 0) { %>
             <% data.forEach(function(city) { %>
-                <h2><%= city.city_name %></h2>
+                <p><%= city.city_name %></p>
                 <p><%= city.state %></p>
                 <p><%= city.pincode %></p>
             <% }); %>

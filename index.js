@@ -18,6 +18,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { resourceLimits } = require('worker_threads');
+const Person = require('./schemas/Person');
 
 // Middlewares
 app.use(express.json());
@@ -51,7 +52,7 @@ app.get('/test',function(req,res){
 // Creating siginip-login-logout
 app.get('/',(req,res)=>{
     if(req.cookies.token){
-        return res.redirect('/panel');
+        return res.redirect('/UserPanel');
     }
     res.render('home');
 });
@@ -95,13 +96,13 @@ app.post('/login',async(req,res)=>{
 
     try {
         if(req.cookies.token){
-            return res.redirect('/panel');
+            return res.redirect('/UserPanel');
         }
     
         // To login as admin or user
-        const adminName = await User.findOne({username:"admin"});
+        const adminName = await User.findOne({email:req.body.email});
         if (adminName.username === "admin") {
-            bcrypt.compare(req.body.password, adminName.password, (err,result)=>{
+            await bcrypt.compare(req.body.password, adminName.password, (err,result)=>{
                 if(result){
                     const ADtoken = jwt.sign({email:adminName.email},"admin",{ expiresIn: '30m' });
                     res.cookie("admin",ADtoken);
@@ -112,11 +113,11 @@ app.post('/login',async(req,res)=>{
             const user = await User.findOne({email: req.body.email});
             if(!user) return res.send("Invalid email or password");
         
-            bcrypt.compare(req.body.password, user.password, (err,result)=>{
+            await bcrypt.compare(req.body.password, user.password, (err,result)=>{
                 if(result){
                     const token = jwt.sign({email:user.email}, "balleballe",{ expiresIn: '1h' });
                     res.cookie("token", token,);
-                    res.redirect('/panel');
+                    res.redirect('/UserPanel');
                 }
                 else res.send("Invalid email or password");
             })
@@ -162,6 +163,13 @@ app.get('/city/addPlace', (req,res)=>{
     res.render('addlocation');
 });
 
+// User
+app.get('/UserPanel',(req,res)=>{
+    res.render('user');
+})
+
+
+
 // CRUD operation
 // Create
 app.post('/city/addcity', async function (req,res) {    
@@ -176,53 +184,48 @@ app.post('/city/addcity', async function (req,res) {
     }
 });
 
+// Add Person
+app.post('/person',async(req,res)=>{
+    try {
+        const { city_name, name, age } = req.body;
+        const person = new Person({
+            city_name,
+            name,
+            age
+        });
+
+        await person.save();
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// Get Person
+app.get('/getPerson/:city_name', async(req,res)=>{
+    try {
+        const city = req.params.city_name;
+        const person = await Person.find({city_name:city}).select('city_name name age -_id');
+        console.log("PersonDetails: ",person);
+    } catch (error) {
+        console.log(error)
+    }
+});
+
 // Read all
 app.get('/city/getcity', async function (req,res) {
     try {
+        const searchQuery = req.query.search || ''; 
+        // console.log("Search Query:", searchQuery);
         const data = await city.find().select('city_name state pincode -_id');
+        console.log("city details: ",data);
         // return res.json({
         //     data,
         //     message: "All cities details"
         // })
-        res.render('readcity',{data:data});
+        // res.render('readcity',{data:data});
+        res.render('user', { data, searchQuery });
     } catch (error) {
         return res.send(error);
-    }
-});
-
-// One Day Plan
-app.get('/city/onedayplan', async(req,res)=>{
-    try {
-        const data = await oneDayTravel();
-        console.log("The data is: ");
-        console.log(data);  
-        res.render('onedayplan',{ data:data});
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-// Two Days Plan
-app.get('/city/twodaysplan', async(req,res)=>{
-    try {
-        const data = await twoDayTravel();
-        console.log("The data is: ");
-        console.log(data);
-        res.render('twodaysplan',{ data:data});
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-// Three Days Plan
-app.get('/city/threedaysplan', async(req,res)=>{
-    try {
-        const data = await threeDayTravel();
-        console.log("The data is: ");
-        console.log(data);
-        res.render('threedaysplan',{ data:data});
-    } catch (error) {
-        console.log(error);
     }
 });
 
@@ -286,19 +289,56 @@ app.delete('/city/deletebyname/:city_name', async function (req,res) {
 app.post('/city/addReview', addReview);
 
 // Route to get reviews of specific city
-app.get('/city/getReview/:cityId', getReview);
+app.get('/city/getReview/:city_name', getReview);
 
 // Route to add the food of a particular city
 app.post('/city/addFood', addfood);
 
 // Route to fetch the food of a particular city
-app.get('/city/food/:cityId', getfood);
+app.get('/city/food/:city_name', getfood);
 
 // Route to add the place of a particular city
 app.post('/city/addPlace', addPlace);
 
 // Route to get the places of a particular city
-app.get('/city/place/:cityId', getPlace);
+app.get('/city/place/:city_name', getPlace);
+
+// Day Plans
+// One Day Plan
+app.get('/city/onedayplan', async(req,res)=>{
+    try {
+        const data = await oneDayTravel();
+        console.log("The data is: ");
+        console.log(data);  
+        res.render('onedayplan',{ data:data});
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// Two Days Plan
+app.get('/city/twodaysplan', async(req,res)=>{
+    try {
+        const data = await twoDayTravel();
+        console.log("The data is: ");
+        console.log(data);
+        res.render('twodaysplan',{ data:data});
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// Three Days Plan
+app.get('/city/threedaysplan', async(req,res)=>{
+    try {
+        const data = await threeDayTravel();
+        console.log("The data is: ");
+        console.log(data);
+        res.render('threedaysplan',{ data:data});
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 app.use('/api_docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

@@ -7,10 +7,10 @@ exports.addfood = async (req,res) => {
     
     try {
         
-        const { cityId, food, description } = req.body;
+        const { city_name, food, description } = req.body;
 
         const newFood = new Food({
-            cityId,
+            city_name,
             food,
             description  
         });
@@ -18,7 +18,7 @@ exports.addfood = async (req,res) => {
         await newFood.save();
 
         console.log("Successfully added the food")
-        res.render('admin');
+        res.redirect('/AdminPanel')
 
     } catch (error) {
         console.log(error);
@@ -31,8 +31,8 @@ exports.addfood = async (req,res) => {
 exports.getfood = async (req,res) => {
     try {
         
-        const id = req.params.cityId;
-        const food = await Food.find({cityId: id}).select('food description -_id');
+        const id = req.params.city_name;
+        const food = await Food.find({city_name: id}).select('food description -_id');
 
         res.status(200).json({food});
         console.log("These are the food items of particular city");

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const locationschema = new mongoose.Schema({
 
-    cityId: { type: mongoose.Schema.Types.ObjectId },
+    city_name: { type:String, ref:'city', required:true },
 
     locationName: {
         type: String,
@@ -24,6 +24,6 @@ const locationschema = new mongoose.Schema({
         type: String
     }
 
-})
+});
 
 module.exports = mongoose.model('Places',locationschema);

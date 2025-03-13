@@ -6,11 +6,11 @@ const mongoose = require('mongoose');
 exports.addPlace = async (req,res) => {
     try {
         
-        const { cityId, locationName, description, time } = req.body;
+        const { city_name, locationName, description, time } = req.body;
 
         // Creates new object
         const newPlace = new Places({
-            cityId,
+            city_name,
             locationName,
             description,
             time
@@ -18,7 +18,7 @@ exports.addPlace = async (req,res) => {
         newPlace.newDate = newPlace.Date.toLocaleString();
         await newPlace.save();
 
-        res.render("admin");
+        res.redirect('/AdminPanel');
         console.log("Successfully added the place")
 
     } catch (error) {
@@ -31,8 +31,8 @@ exports.addPlace = async (req,res) => {
 exports.getPlace = async (req,res) => {
     try {
         
-        const id = req.params.cityId;
-        const place = await Places.find({cityId: id}).select('locationName description time -_id');
+        const id = req.params.city_name;
+        const place = await Places.find({city_name: id}).select('locationName description time -_id');
 
         res.status(200).send({place});
         console.log("These are the places to visit in this city");
