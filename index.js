@@ -166,7 +166,7 @@ app.get('/city/addPlace', (req,res)=>{
 // User
 app.get('/UserPanel',(req,res)=>{
     res.render('user');
-})
+});
 
 
 
