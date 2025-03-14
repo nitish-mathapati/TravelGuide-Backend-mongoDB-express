@@ -8,21 +8,34 @@ exports.addfood = async (req,res) => {
     try {
         
         const { city_name, food, description } = req.body;
+        const checkcity = await city.findOne({city_name});
 
+        try {
+            if (!checkcity) {
+                console.log("Add the city first");
+                // res.status(400).json({message:"Add the city first"});
+                req.flash('error','Add the city first');
+                res.redirect('/AdminPanel');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        
         const newFood = new Food({
             city_name,
             food,
-            description  
+            description,
+            newDate: new Date().toLocaleString()
         });
-        newFood.newDate = newFood.Date.toLocaleString();
+        // newFood.newDate = newFood.Date.toLocaleString();
         await newFood.save();
 
         console.log("Successfully added the food")
         res.redirect('/AdminPanel')
-
+        
     } catch (error) {
         console.log(error);
-        res.send("Did not add food details")
+        res.status(500).json({message:"Did not add food details"});
     }
 
 };

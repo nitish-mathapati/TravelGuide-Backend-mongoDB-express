@@ -9,6 +9,13 @@
 </head>
 <body>
     <div class="container w-full h-screen text-black p-10">
+
+        <% if (messages.error && messages.error.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        
         <div class="box">
             <h2>Welcome ADMIN</h2>
             <p>Choose an option:</p>

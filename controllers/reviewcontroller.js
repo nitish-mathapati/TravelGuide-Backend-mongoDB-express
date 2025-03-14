@@ -7,23 +7,30 @@ const mongoose = require('mongoose');
 exports.addReview = async (req,res) => {
     
     try {
-        const { city_name, starRating, review, reviewer } = req.body;
-
         //const id = mongoose.Types.ObjectId(cityId); 
-        
+        const { city_name, starRating, review, reviewer } = req.body;
+        const checkcity = await city.findOne({city_name});
+
+        try {
+            if(!checkcity){
+                console.log("Add the city first");
+                return res.status(400).json({message:"Add the city first"});
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(404).json({message:"Add the city first"});
+        }
+
         // Create a new Review
         const newReview = new Reviews({
             city_name,
             starRating,
             review,
-            reviewer
+            reviewer,
+            newDate: new Date().toLocaleString()
         });
-        newReview.newDate = newReview.Date.toLocaleString()
-        console.log(newReview)
+        // newReview.newDate = newReview.Date.toLocaleString()
         await newReview.save();
-
-        // Update the city's average rating
-        // await updateAvgRating(cityId);
 
         res.redirect("/");
         console.log("Review added successfully. Thankyou :) for your valuable time 😁")

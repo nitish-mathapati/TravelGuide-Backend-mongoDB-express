@@ -7,19 +7,31 @@ exports.addPlace = async (req,res) => {
     try {
         
         const { city_name, locationName, description, time } = req.body;
+        const checkcity = await city.findOne({city_name});
+
+        try {
+            if(!checkcity){
+                console.log('Add the city first');
+                // res.redirect('/AdminPanel');
+                return res.status(400).json({message:"Add the city first"});
+            }
+        } catch (error) {
+            console.log(error)
+        }
 
         // Creates new object
         const newPlace = new Places({
             city_name,
             locationName,
             description,
-            time
+            time,
+            newDate: new Date().toLocaleString()
         });
-        newPlace.newDate = newPlace.Date.toLocaleString();
+        // newPlace.newDate = newPlace.Date.toLocaleString();
         await newPlace.save();
 
-        res.redirect('/AdminPanel');
         console.log("Successfully added the place")
+        res.redirect('/AdminPanel');
 
     } catch (error) {
         res.status(500).send("Did not add place details");

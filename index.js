@@ -19,11 +19,19 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { resourceLimits } = require('worker_threads');
 const Person = require('./schemas/Person');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(flash());
 
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -63,9 +71,18 @@ app.get('/signup',(req,res)=>{
 });
 
 app.post('/signup',(req,res)=>{
-    
     try {
+
         const { username, email, password, age } = req.body;
+
+        try {
+            const check = User.find({email});
+            if(check){
+                return res.status(400).json({"message":"User already exists"})
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
         // Hashing the password
         bcrypt.genSalt(10, (err,salt)=>{
@@ -82,7 +99,7 @@ app.post('/signup',(req,res)=>{
                 res.render('panel');
             })
         })
-    } catch (error) {
+    }catch (error) {
         console.log(error);
     }
 });
@@ -145,7 +162,7 @@ app.get('/panel',(req,res)=>{
 
 // Admin
 app.get('/AdminPanel',(req,res)=>{
-    res.render('admin');
+    res.render('admin',{message:req.flash()});
 });
 
 // City

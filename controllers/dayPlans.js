@@ -11,8 +11,8 @@ async function oneDayTravel(req,res){
     try {
 
         const city = req.params.city_name;
-        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
-        console.log(allPlaces);
+        const allPlaces = await Places.find({city_name:city});
+        // console.log(allPlaces);  
     
         let filteredPlaces = [];
         let totalTime = 0;
@@ -22,16 +22,20 @@ async function oneDayTravel(req,res){
                 filteredPlaces.push(place);
                 totalTime += place.time;
             }
-            else{
-                console.log("Filter Places: ",filteredPlaces);
-                res.render('onedayplan',{ data:filteredPlaces });
-                // return filteredPlaces;
-                // res.render('onedaytrip',{place:filteredPlaces});
-            }
+            // else{
+            //     // return filteredPlaces;
+            //     // res.render('onedaytrip',{place:filteredPlaces});
+            // }
         }
+        // const places = filteredPlaces.sort({time:1});
+        const places = filteredPlaces.sort((a, b) => a.time - b.time);
+        console.log("Filter Places: ",places);
+        res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);
+        res.status(400).send('Error occurred while processing 1D plan');
+        // alert(`Error: ${error.message}`,'Error occurred while processing 1D plan');
     }
 };
 // module.exports = oneDayTravel;
@@ -48,7 +52,7 @@ async function twoDayTravel(req,res){
     try {
 
         const city = req.params.city_name
-        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
+        const allPlaces = await Places.find({city_name:city});
         // console.log(allPlaces);
     
         let filteredPlaces = [];
@@ -59,13 +63,14 @@ async function twoDayTravel(req,res){
                 filteredPlaces.push(place);
                 totalTime += place.time;
             }
-            else{
-                console.log("Filter Places: ",filteredPlaces);
-                res.render('twodaysplan',{ data:filteredPlaces });
-                // return filteredPlaces;
-                // res.render('onedaytrip',{place:filteredPlaces});
-            }
+            // else{
+            //     // return filteredPlaces;
+            //     // res.render('onedaytrip',{place:filteredPlaces});
+            // }
         }
+        const places = filteredPlaces.sort((a, b) => a.time - b.time);
+        console.log("Filter Places: ",places);
+        res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);
@@ -85,7 +90,7 @@ async function threeDayTravel(req,res){
     try {
 
         const city = req.params.city_name
-        const allPlaces = await Places.find({city_name:city}).sort({time:-1});
+        const allPlaces = await Places.find({city_name:city});
         // console.log(allPlaces);
     
         let filteredPlaces = [];
@@ -96,13 +101,14 @@ async function threeDayTravel(req,res){
                 filteredPlaces.push(place);
                 totalTime += place.time;
             }
-            else{
-                console.log("Filter Places: ",filteredPlaces);
-                res.render('threedaysplan',{ data:filteredPlaces });
-                // return filteredPlaces;
-                // res.render('onedaytrip',{place:filteredPlaces});
-            }
+            // else{
+            //     // return filteredPlaces;
+            //     // res.render('onedaytrip',{place:filteredPlaces});
+            // }
         }
+        const places = filteredPlaces.sort((a, b) => a.time - b.time);
+        console.log("Filter Places: ",places);
+        res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);
