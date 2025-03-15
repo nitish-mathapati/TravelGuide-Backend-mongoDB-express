@@ -21,6 +21,8 @@ const { resourceLimits } = require('worker_threads');
 const Person = require('./schemas/Person');
 const flash = require('connect-flash');
 const session = require('express-session');
+const nodemailer = require('nodemailer');
+const { sendWelcomeEmail } = require('./controllers/email');
 
 // Middlewares
 app.use(express.json());
@@ -70,35 +72,53 @@ app.get('/signup',(req,res)=>{
     res.render('signup');
 });
 
-app.post('/signup',(req,res)=>{
+app.post('/signup',async(req,res)=>{
     try {
 
         const { username, email, password, age } = req.body;
 
-        try {
-            const check = User.find({email});
-            if(check){
-                return res.status(400).json({"message":"User already exists"})
-            }
-        } catch (error) {
-            console.log(error);
+        const check = await User.findOne({email});
+        if(check){
+            return res.status(400).json({"message":"User already exists"})
         }
 
         // Hashing the password
-        bcrypt.genSalt(10, (err,salt)=>{
-            bcrypt.hash(password, salt, async (req,hash)=>{
-                const createdUser = await User.create({
-                    username,
-                    email,
-                    password:hash,
-                    age
-                })
-                const token = jwt.sign({email}, "balleballe");
-                res.cookie("token", token);
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password,salt);
 
-                res.render('panel');
-            })
+        const createdUser = await User.create({
+            username,
+            email,
+            password:hash,
+            age
         })
+
+        const token = jwt.sign({email}, "balleballe");
+        res.cookie("token", token);
+
+        // Sending Email to User
+        sendWelcomeEmail(email,username);
+
+        res.render('user');
+
+        // bcrypt.genSalt(10, (err,salt)=>{
+        //     bcrypt.hash(password, salt, async (req,hash)=>{
+        //         const createdUser = await User.create({
+        //             username,
+        //             email,
+        //             password:hash,
+        //             age
+        //         })
+        //         const token = jwt.sign({email}, "balleballe");
+        //         res.cookie("token", token);
+
+        //         // Sending Email to User
+        //         sendWelcomeEmail(email,username);
+
+        //         res.render('panel');
+        //     })
+        // })
+
     }catch (error) {
         console.log(error);
     }

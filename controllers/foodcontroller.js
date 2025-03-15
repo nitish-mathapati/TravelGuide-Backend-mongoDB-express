@@ -15,7 +15,7 @@ exports.addfood = async (req,res) => {
                 console.log("Add the city first");
                 // res.status(400).json({message:"Add the city first"});
                 req.flash('error','Add the city first');
-                res.redirect('/AdminPanel');
+                return res.redirect('/AdminPanel');
             }
         } catch (error) {
             console.log(error);

@@ -10,12 +10,12 @@
 <body>
     <div class="container w-full h-screen text-black p-10">
 
-        <% if (messages.error && messages.error.length > 0) { %>
-            <div class="alert alert-danger">
-                <%= messages.error %>
-            </div>
+        <% if (message.error && message.error.length > 0) { %>
+            <script>
+                alert('<%= message.error %>');
+            </script>
         <% } %>
-        
+
         <div class="box">
             <h2>Welcome ADMIN</h2>
             <p>Choose an option:</p>
