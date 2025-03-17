@@ -42,7 +42,7 @@ exports.getPlace = async (req,res) => {
         const id = req.params.city_name;
         const place = await Places.find({city_name: id}).select('locationName description time -_id');
 
-        res.status(200).send({place});
+        res.status(200).json({place});
         console.log("These are the places to visit in this city");
 
     } catch (error) {

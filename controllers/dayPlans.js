@@ -29,7 +29,7 @@ async function oneDayTravel(req,res){
         }
         // const places = filteredPlaces.sort({time:1});
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
-        console.log("Filter Places: ",places);
+        console.log("One day plan: ",places);
         res.render('onedayplan',{ data:places });
 
     } catch (error) {
@@ -69,7 +69,7 @@ async function twoDayTravel(req,res){
             // }
         }
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
-        console.log("Filter Places: ",places);
+        console.log("Two days plan: ",places);
         res.render('onedayplan',{ data:places });
 
     } catch (error) {
@@ -107,7 +107,7 @@ async function threeDayTravel(req,res){
             // }
         }
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
-        console.log("Filter Places: ",places);
+        console.log("Three days plan ",places);
         res.render('onedayplan',{ data:places });
 
     } catch (error) {

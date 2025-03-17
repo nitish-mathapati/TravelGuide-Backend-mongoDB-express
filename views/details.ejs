@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Details</title>
+</head>
+<body>
+    <h1>Explore city</h1>
+
+    <!-- Places to visit in the city -->
+    <div>
+        <h2>Places to visit:</h2>
+        <a href="/city/place/<%= city_name %>">View Places to Visit</a>
+    </div>
+
+    <!-- Food options in the city -->
+    <div>
+        <h2>Food:</h2>
+        <a href="/city/food/<%= city_name %>">View Food Options</a>
+    </div>
+
+    <!-- Days Plan Slider -->
+    <div>
+        <h2>Days Plan:</h2>
+        <label for="days">Choose your plan:</label>
+        <div>
+            <button onclick="window.location.href='/city/onedayplan/<%= city_name %>'">1 Day</button>
+            <button onclick="window.location.href='/city/twodaysplan/<%= city_name %>'">2 Days</button>
+            <button onclick="window.location.href='/city/threedaysplan/<%= city_name %>'">3 Days</button>
+            <button onclick="window.location.href='/city/getcity'">1 Week</button>
+        </div>
+    </div>
+</body>
+</html>

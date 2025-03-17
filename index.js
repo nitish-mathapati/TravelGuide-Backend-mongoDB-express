@@ -244,9 +244,26 @@ app.get('/city/addPlace', (req,res)=>{
 });
 
 // User
-app.get('/UserPanel',(req,res)=>{
-    res.render('user');
+app.get('/UserPanel',async(req,res)=>{
+    try {
+        const cities = await city.find();
+        // console.log("citie sare: ",cities);
+
+        if (cities && cities.length > 0) {
+            res.render('user', { cities });
+        } else {
+            res.render('user', { cities: [] });
+        }
+        // res.render('addfood',{cities});
+    } catch (error) {
+        console.log(error);
+    }
 });
+
+// Details
+app.get('/citydetails',(req,res)=>{
+    res.render('details');
+})
 
 
 
@@ -294,7 +311,7 @@ app.get('/getPerson/:city_name', async(req,res)=>{
 // Read all
 app.get('/city/getcity', async function (req,res) {
     try {
-        const searchQuery = req.query.search || ''; 
+        // const searchQuery = req.query.search || ''; 
         // console.log("Search Query:", searchQuery);
         const data = await city.find().select('city_name state pincode -_id');
         console.log("city details: ",data);
@@ -303,7 +320,7 @@ app.get('/city/getcity', async function (req,res) {
         //     message: "All cities details"
         // })
         // res.render('readcity',{data:data});
-        res.render('user', { data, searchQuery });
+        // res.render('user', { data });
     } catch (error) {
         return res.send(error);
     }
@@ -375,7 +392,7 @@ app.get('/city/getReview/:city_name', getReview);
 app.get('/city/Food',async(req,res)=>{
     try {
         const cities = await city.find();
-        console.log("citiesare: ",cities);
+        // console.log("cities are: ",cities);
 
         if (cities && cities.length > 0) {
             res.render('addfood', { cities });
@@ -391,12 +408,17 @@ app.post('/city/addFood', addfood);
 
 // Route to fetch the food of a particular city
 app.get('/city/food/:city_name', getfood);
+// app.get('/cityfood/:city_name',async(req,res)=>{
+//     const id = req.params.city_name;
+//     const food = await Food.find({city_name: id}).select('food description -_id');
+//     res.render('foodDetails',{ food });
+// })
 
 // Route to add the place of a particular city
 app.get('/city/Place',async(req,res)=>{
     try {
         const cities = await city.find();
-        console.log("citiesare: ",cities);
+        // console.log("citiesare: ",cities);
     
         if (cities && cities.length > 0) {
             res.render('addlocation', { cities });
@@ -411,6 +433,13 @@ app.post('/city/addPlace', addPlace);
 
 // Route to get the places of a particular city
 app.get('/city/place/:city_name', getPlace);
+app.get('/cityplaces/:city_name',async(req,res)=>{
+    // const id = req.params.city_name;
+    // const data = await Places.find({city_name: id}).select('locationName description time -_id');
+    // res.render('cityDetails',{ data });
+    const cityName = req.params.city_name;
+    res.render('cityDetails', { city_name: cityName });
+});
 
 // Day Plans
 // One Day Plan
