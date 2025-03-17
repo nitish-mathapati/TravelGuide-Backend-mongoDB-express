@@ -3,15 +3,23 @@ const mongoose = require('mongoose');
 const cities = new mongoose.Schema({
     city_name:{
         type: String,
-        require: true
+        required: true
     },
     state: {
         type: String,
-        require: true
+        required: true
     },
     pincode: {
         type: Number,
-        require: true
+        required: true
+    },
+    latitude: {
+        type: Number,
+        required: true
+    },
+    longitude: {
+        type: Number,
+        required: true
     }
 },
     {

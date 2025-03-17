@@ -17,6 +17,13 @@ const userSchema = new mongoose.Schema({
     age: {
         type: Number,
         required: true
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verifytoken: {
+        type: String
     }
 
 });

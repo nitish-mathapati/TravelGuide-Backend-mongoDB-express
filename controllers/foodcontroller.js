@@ -8,18 +8,14 @@ exports.addfood = async (req,res) => {
     try {
         
         const { city_name, food, description } = req.body;
-        const checkcity = await city.findOne({city_name});
+        // const checkcity = await city.findOne({city_name});
 
-        try {
-            if (!checkcity) {
-                console.log("Add the city first");
-                // res.status(400).json({message:"Add the city first"});
-                req.flash('error','Add the city first');
-                return res.redirect('/AdminPanel');
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        // if (!checkcity) {
+        //     console.log("Add the city first");
+        //     // res.status(400).json({message:"Add the city first"});
+        //     req.flash('error','Add the city first');
+        //     return res.redirect('/AdminPanel');
+        // }
         
         const newFood = new Food({
             city_name,

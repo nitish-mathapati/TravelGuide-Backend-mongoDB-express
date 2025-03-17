@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const city = require('./schemas/cityschema');
 const User = require('./schemas/userschema');
+const Food = require('./schemas/foodschema');
 const { oneDayTravel, twoDayTravel, threeDayTravel } = require('./controllers/dayPlans');
 const swaggerUi = require('swagger-ui-express');
 const { swaggerDocs } = require('./swagger');
@@ -22,7 +23,7 @@ const Person = require('./schemas/Person');
 const flash = require('connect-flash');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
-const { sendWelcomeEmail } = require('./controllers/email');
+const { sendVerificationEmail, sendSuccessEmail } = require('./controllers/email');
 
 // Middlewares
 app.use(express.json());
@@ -86,20 +87,25 @@ app.post('/signup',async(req,res)=>{
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password,salt);
 
+        const token = jwt.sign({email}, "balleballe", { expiresIn: '1h' });
+        res.cookie("token", token);
+
         const createdUser = await User.create({
             username,
             email,
             password:hash,
-            age
+            age,
+            verifytoken: token
         })
 
-        const token = jwt.sign({email}, "balleballe");
-        res.cookie("token", token);
+        // createdUser.token = token;
+        // await createdUser.save();
 
         // Sending Email to User
-        sendWelcomeEmail(email,username);
+        sendVerificationEmail(email,username,token);
 
-        res.render('user');
+        // res.render('user');
+        res.status(200).json({ message: 'Signup successful. Please check your email for verification.' });
 
         // bcrypt.genSalt(10, (err,salt)=>{
         //     bcrypt.hash(password, salt, async (req,hash)=>{
@@ -123,6 +129,43 @@ app.post('/signup',async(req,res)=>{
         console.log(error);
     }
 });
+
+// Email verification
+app.get('/verify/:verifytoken',async(req,res)=>{
+    try {
+        const token = req.params;
+
+        console.log('Token:', token);
+
+        if (!token) {
+            return res.status(400).json({ message: 'No token provided' });
+        }
+
+        const decode = jwt.verify(token.verifytoken, "balleballe");
+        console.log("decode",decode);
+        const user = await User.findOne({email:decode.email});
+
+        if(!user){
+            return res.status(400).json({message:"user not found"});
+        }
+
+        if(user.isVerified){
+            return res.status(400).json({message:"User is already verified"});
+        }
+
+        user.isVerified = true;
+        user.verifytoken = undefined;
+        await user.save();
+
+        sendSuccessEmail(user.email,user.username);
+
+        res.render('panel');
+
+    } catch (error) {
+        console.log("the error is",error);
+        res.status(400).json({ message: 'Invalid or expired token' });
+    }
+})
 
 // Login
 app.get('/login', (req,res)=>{
@@ -329,12 +372,41 @@ app.post('/city/addReview', addReview);
 app.get('/city/getReview/:city_name', getReview);
 
 // Route to add the food of a particular city
+app.get('/city/Food',async(req,res)=>{
+    try {
+        const cities = await city.find();
+        console.log("citiesare: ",cities);
+
+        if (cities && cities.length > 0) {
+            res.render('addfood', { cities });
+        } else {
+            res.render('addfood', { cities: [] });
+        }
+        // res.render('addfood',{cities});
+    } catch (error) {
+        console.log(error);
+    }
+});
 app.post('/city/addFood', addfood);
 
 // Route to fetch the food of a particular city
 app.get('/city/food/:city_name', getfood);
 
 // Route to add the place of a particular city
+app.get('/city/Place',async(req,res)=>{
+    try {
+        const cities = await city.find();
+        console.log("citiesare: ",cities);
+    
+        if (cities && cities.length > 0) {
+            res.render('addlocation', { cities });
+        } else {
+            res.render('addlocation', { cities: [] });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
 app.post('/city/addPlace', addPlace);
 
 // Route to get the places of a particular city

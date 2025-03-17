@@ -7,17 +7,13 @@ exports.addPlace = async (req,res) => {
     try {
         
         const { city_name, locationName, description, time } = req.body;
-        const checkcity = await city.findOne({city_name});
-
-        try {
-            if(!checkcity){
-                console.log('Add the city first');
-                // res.redirect('/AdminPanel');
-                return res.status(400).json({message:"Add the city first"});
-            }
-        } catch (error) {
-            console.log(error)
-        }
+        // const checkcity = await city.findOne({city_name});
+        
+        // if(!checkcity){
+        //     console.log('Add the city first');
+        //     // res.redirect('/AdminPanel');
+        //     return res.status(400).json({message:"Add the city first"});
+        // }
 
         // Creates new object
         const newPlace = new Places({
