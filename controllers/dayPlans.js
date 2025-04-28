@@ -4,7 +4,7 @@ const Places = require('../schemas/locationsSchema');
 //One Day Plan
 // Need to fetch all the places under setTime
 async function oneDayTravel(req,res){
-
+    
     const setTimeinHours = 4;
     const setTime = setTimeinHours * 60;
 
@@ -30,7 +30,8 @@ async function oneDayTravel(req,res){
         // const places = filteredPlaces.sort({time:1});
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
         console.log("One day plan: ",places);
-        res.render('onedayplan',{ data:places });
+        res.status(200).json({places});
+        // res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);
@@ -70,7 +71,8 @@ async function twoDayTravel(req,res){
         }
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
         console.log("Two days plan: ",places);
-        res.render('onedayplan',{ data:places });
+        res.status(200).json({places});
+        // res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);
@@ -108,7 +110,8 @@ async function threeDayTravel(req,res){
         }
         const places = filteredPlaces.sort((a, b) => a.time - b.time);
         console.log("Three days plan ",places);
-        res.render('onedayplan',{ data:places });
+        res.status(200).json({places});
+        // res.render('onedayplan',{ data:places });
 
     } catch (error) {
         console.log(error);

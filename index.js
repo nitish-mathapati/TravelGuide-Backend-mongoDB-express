@@ -24,6 +24,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 const { sendVerificationEmail, sendSuccessEmail } = require('./controllers/email');
+// import { generateVerificationToken } from './controllers/email';
+const {generateVerificationToken} = require('./controllers/email');
 
 // Middlewares
 app.use(express.json());
@@ -73,14 +75,16 @@ app.get('/signup',(req,res)=>{
     res.render('signup');
 });
 
+const saltCache = {};
 app.post('/signup',async(req,res)=>{
     try {
 
         const { username, email, password, age } = req.body;
-
         const check = await User.findOne({email});
         if(check){
             return res.status(400).json({"message":"User already exists"})
+        } else{
+            res.clearCookie("token");
         }
 
         // Hashing the password
@@ -88,21 +92,29 @@ app.post('/signup',async(req,res)=>{
         const hash = await bcrypt.hash(password,salt);
 
         const token = jwt.sign({email}, "balleballe", { expiresIn: '1h' });
-        res.cookie("token", token);
+        res.cookie("token",token);
+    
 
         const createdUser = await User.create({
             username,
             email,
             password:hash,
-            age,
-            verifytoken: token
-        })
+            age
+            // verifytoken: token
+        });
+
+        const hashverify = await generateVerificationToken(email, "signup");
+        console.log("Hashverify: ",hashverify);
+        const verifyToken = encodeURIComponent(hashverify);
+        console.log("url encoded hash", verifyToken);
+
+        saltCache[email] = salt;
+        
+        // Sending Email to User
+        sendVerificationEmail(email,username,verifyToken);
 
         // createdUser.token = token;
         // await createdUser.save();
-
-        // Sending Email to User
-        sendVerificationEmail(email,username,token);
 
         // res.render('user');
         res.status(200).json({ message: 'Signup successful. Please check your email for verification.' });
@@ -114,7 +126,7 @@ app.post('/signup',async(req,res)=>{
         //             email,
         //             password:hash,
         //             age
-        //         })
+        //         })http://localhost:2025/verify/%242b%2410%247tTsUHc4fIGvNflzTUZlaez7j4XlTq9HQF.sAh.blxGs0CUtHrFM2
         //         const token = jwt.sign({email}, "balleballe");
         //         res.cookie("token", token);
 
@@ -133,39 +145,87 @@ app.post('/signup',async(req,res)=>{
 // Email verification
 app.get('/verify/:verifytoken',async(req,res)=>{
     try {
-        const token = req.params;
+        const verificationToken = req.params.verifytoken;
+        console.log("url encoded hash", verificationToken)
 
-        console.log('Token:', token);
-
-        if (!token) {
+        if (!verificationToken) {
             return res.status(400).json({ message: 'No token provided' });
         }
 
-        const decode = jwt.verify(token.verifytoken, "balleballe");
-        console.log("decode",decode);
-        const user = await User.findOne({email:decode.email});
+        // const decode = jwt.verify(token.verifytoken, "balleballe");
+        // console.log("decode",decode);
+        // const user = await User.findOne({email:decode.email});
+
+        const cookieToken = req.cookies.token;
+        console.log(cookieToken);
+        if (!cookieToken) {
+            return res.status(400).json({ message: 'No cookie token found. Please sign up again.' });
+        }
+        const decode = jwt.verify(cookieToken,"balleballe");
+
+        console.log("decodeEmail: ",decode.email);
+         
+        const user = await User.findOne({"email":decode.email});
 
         if(!user){
+            res.clearCookie("token")
             return res.status(400).json({message:"user not found"});
         }
 
         if(user.isVerified){
-            return res.status(400).json({message:"User is already verified"});
+                return res.status(400).json({message:"User is already verified"});
+        }
+        
+        // const salt = saltCache[decode.email];
+        // if (!salt) {
+        //     return res.status(400).json({ message: "Salt not found, please try again." });
+        // };
+
+        // const genToken = await generateVerificationToken(decode.email,"verification");
+        // console.log("regenerated token",genToken);
+        const x = decodeURIComponent(verificationToken);
+        console.log("url decode hash: ",x);
+
+        // const hashedX = await bcrypt.hash(x,salt);
+        // console.log("Hashed-X: ",hashedX);
+
+        // (Boolean)Returns true if they are equal
+        // console.log("Comparison:", genToken === x);
+
+        const plainPass = decode.email+'something';
+
+        const isMatch = await bcrypt.compare((plainPass),x);
+        console.log("Is match:", isMatch);
+
+        if (isMatch) {
+            sendSuccessEmail(user.email,user.username);
+            user.isVerified = true;
+            // user.verifytoken = undefined;
+            await user.save();
+            res.redirect('/UserPanel');
+        } else {
+            return res.status(400).json({message: "you fool"})
         }
 
-        user.isVerified = true;
-        user.verifytoken = undefined;
-        await user.save();
-
-        sendSuccessEmail(user.email,user.username);
-
-        res.render('panel');
-
+        // const x = decodeURIComponent(verificationToken);
+        // if(genToken ===  decodeURIComponent(verificationToken)){
+        //     sendSuccessEmail(user.email,user.username);
+        //     user.isVerified = true;
+        //     // user.verifytoken = undefined;
+        //     await user.save();
+        //     res.render('panel');
+        // } else {
+        //     res.status(400).json({message: "you fool"})
+        // }     
+        //$2b$10$u3l1GiPi.i0O87SQqE3Cb.HwMgCHTOSjOaWvBfd/7yfN3X7Grz/X6
+        //$2b$10$ucjfNr5NsHIF0skVCTCKpemSL0EZ3AfUZLsbOJ.hTlsPIdW6u5XeW
+        //http://localhost:2025/verify/%242b%2410%24vI2r8zWLgUZ%2FZWrgv2D6xOsY.U%2FHcLCrp27ekY50CWsje4wYMS8o6
     } catch (error) {
         console.log("the error is",error);
         res.status(400).json({ message: 'Invalid or expired token' });
     }
-})
+});
+
 
 // Login
 app.get('/login', (req,res)=>{
@@ -175,13 +235,21 @@ app.get('/login', (req,res)=>{
 app.post('/login',async(req,res)=>{
 
     try {
+
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.clearCookie("token"); // Remove the cookie
+            return res.status(400).json({ message: 'User has been deleted. Please sign up again.' });
+        }
+
         if(req.cookies.token){
             return res.redirect('/UserPanel');
         }
     
         // To login as admin or user
         const adminName = await User.findOne({email:req.body.email});
-        if (adminName.username === "admin") {
+        if (adminName && adminName.username === "admin") {
             await bcrypt.compare(req.body.password, adminName.password, (err,result)=>{
                 if(result){
                     const ADtoken = jwt.sign({email:adminName.email},"admin",{ expiresIn: '30m' });
@@ -277,7 +345,7 @@ app.post('/city/addcity', async function (req,res) {
         res.render('admin');
     } catch (error) {
         res.send("Oopss..! Something went wrong")
-        return res.send(error);
+        return console.error(error);
     }
 });
 
@@ -438,7 +506,7 @@ app.get('/cityplaces/:city_name',async(req,res)=>{
     // const data = await Places.find({city_name: id}).select('locationName description time -_id');
     // res.render('cityDetails',{ data });
     const cityName = req.params.city_name;
-    res.render('cityDetails', { city_name: cityName });
+    res.render('details', { city_name:cityName });
 });
 
 // Day Plans

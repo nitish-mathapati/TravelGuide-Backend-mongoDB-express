@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const User = require('../schemas/userschema');
+const bcrypt =require('bcrypt');
 const { text } = require('body-parser');
 
 exports.sendVerificationEmail = ( email,username,token ) => {
@@ -59,3 +60,21 @@ exports.sendSuccessEmail = ( email,username ) =>{
 
 };
 
+// async function generateVerificationToken(email, str){
+//     const secretKey = "something";
+//     const token = email+secretKey;
+//     console.log(`${str} Email: `,email);
+//     const salt = await bcrypt.genSalt(10);
+//     const hash = await bcrypt.hash(token,salt);
+//     console.log(` ${str} Hash: `,hash);
+//     // await User.updateOne({email},{"$set":{"verifytoken":hash}});
+//     return hash;
+// };
+async function generateVerificationToken(email,str) {
+    const secretKey = "something"; 
+    const token = email + secretKey;
+
+    const hash = await bcrypt.hash(token,10);  // Using the same salt from signup
+    return hash;
+};
+module.exports.generateVerificationToken = generateVerificationToken;

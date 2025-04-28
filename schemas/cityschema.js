@@ -12,14 +12,6 @@ const cities = new mongoose.Schema({
     pincode: {
         type: Number,
         required: true
-    },
-    latitude: {
-        type: Number,
-        required: true
-    },
-    longitude: {
-        type: Number,
-        required: true
     }
 },
     {

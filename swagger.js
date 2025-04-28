@@ -20,7 +20,7 @@ const options = {
         },
         servers:[
             {
-            url:"http://localhost:4000"
+            url:"http://localhost:2025"
             },
             {
             url:"http://localhost:3000" 
@@ -36,11 +36,24 @@ const options = {
                 }
             },
             {
-                name: "Cars",
-                description: "Everything about cars",
+                name: "Foods",
+                description: "Everything about food of particular city",
                 externalDocs: {
-                    description: "Cars",
-                    url: "https://www.netcarshow.com/"
+                    description: "Food"
+                }
+            },
+            {
+                name: "Locations",
+                description: "Everything about locations of particular city",
+                externalDocs: {
+                    description: "Location"
+                }
+            },
+            {
+                name: "Day Plans",
+                description: "Choose day plans",
+                externalDocs: {
+                    description: "Location"
                 }
             }
         ],
@@ -272,6 +285,176 @@ const options = {
                         }
                     }
                 }
+            },
+            '/city/food/{city_name}':{
+                get:{
+                    tags:[
+                        "Foods"
+                    ],
+                    summary: "Find food ",
+                    description: "Returns all food of particular city",
+                    operationId: "food",
+                    parameters:[{
+                        name: "city_name",
+                        in: "path",
+                        description: "Name of city to return foods",
+                        required:true,
+                        schema:{
+                            $ref :"#/components/schemas/cities/properties/city_name"
+                        }
+                    }],
+                    responses:{
+                        '200':{
+                            description: "Successful Operation",
+                            content: {
+                                'application/json':{
+                                    schema:{
+                                        $ref: "#/components/schemas/foods"
+                                    }
+                                }
+                            }
+                        },
+                        '400':{
+                            description: "City not found"
+                        }
+                    },
+                }
+            },
+            '/city/place/{city_name}':{
+                get:{
+                    tags:[
+                        "Locations"
+                    ],
+                    summary: "Find Place",
+                    description: "Returns all places of particular city",
+                    operationId: "place",
+                    parameters:[{
+                        name: "city_name",
+                        in: "path",
+                        description: "Name of city to return foods",
+                        required:true,
+                        schema:{
+                            $ref :"#/components/schemas/cities/properties/city_name"
+                        }
+                    }],
+                    responses:{
+                        '200':{
+                            description: "Successful Operation",
+                            content: {
+                                'application/json':{
+                                    schema:{
+                                        $ref: "#/components/schemas/locations"
+                                    }
+                                }
+                            }
+                        },
+                        '400':{
+                            description: "City not found"
+                        }
+                    },
+                }
+            },
+            '/city/onedayplan/{city_name}':{
+                get:{
+                    tags:[
+                        "Day Plans"
+                    ],
+                    summary: "One-day Plan",
+                    description: "Returns all places of particular city for one day trip",
+                    operationId: "place",
+                    parameters:[{
+                        name: "city_name",
+                        in: "path",
+                        description: "Name of city to return foods",
+                        required:true,
+                        schema:{
+                            $ref :"#/components/schemas/cities/properties/city_name"
+                        }
+                    }],
+                    responses:{
+                        '200':{
+                            description: "Successful Operation",
+                            content: {
+                                'application/json':{
+                                    schema:{
+                                        $ref: "#/components/schemas/locations"
+                                    }
+                                }
+                            }
+                        },
+                        '400':{
+                            description: "City not found"
+                        }
+                    },
+                }
+            },
+            '/city/twodaysplan/{city_name}':{
+                get:{
+                    tags:[
+                        "Day Plans"
+                    ],
+                    summary: "Two-days Plan",
+                    description: "Returns all places of particular city for two days trip",
+                    operationId: "place",
+                    parameters:[{
+                        name: "city_name",
+                        in: "path",
+                        description: "Name of city to return foods",
+                        required:true,
+                        schema:{
+                            $ref :"#/components/schemas/cities/properties/city_name"
+                        }
+                    }],
+                    responses:{
+                        '200':{
+                            description: "Successful Operation",
+                            content: {
+                                'application/json':{
+                                    schema:{
+                                        $ref: "#/components/schemas/locations"
+                                    }
+                                }
+                            }
+                        },
+                        '400':{
+                            description: "City not found"
+                        }
+                    },
+                }
+            },
+            '/city/threedaysplan/{city_name}':{
+                get:{
+                    tags:[
+                        "Day Plans"
+                    ],
+                    summary: "Three-days Plan",
+                    description: "Returns all places of particular city for three days trip",
+                    operationId: "place",
+                    parameters:[{
+                        name: "city_name",
+                        in: "path",
+                        description: "Name of city to return foods",
+                        required:true,
+                        schema:{
+                            $ref :"#/components/schemas/cities/properties/city_name"
+                        }
+                    }],
+                    responses:{
+                        '200':{
+                            description: "Successful Operation",
+                            content: {
+                                'application/json':{
+                                    schema:{
+                                        $ref: "#/components/schemas/locations"
+                                    }
+                                }
+                            }
+                        },
+                        '400':{
+                            description: "City not found"
+                        }
+                    },
+                }
             }
         },
         components:{
@@ -297,30 +480,54 @@ const options = {
                         }
                     }
                 },
-                cars:{                    // Schema 2
+                foods:{
                     required:[
-                        "category",
-                        "company",
+                        "city_name",
+                        "food",
+                        "description"
                     ],
                     type: "object",
                     properties:{
-                        company:{
+                        city_name:{
                             type:'string',
-                            example:"Koenigsegg"
+                            example: "Kalaburgi"
                         },
-                        category:{
+                        food:{
                             type:'string',
-                            example:"Sedan"
+                            example:"Rotti"
                         },
-                        model:{
+                        description:{
                             type:'string',
-                            example:"Koenigsegg CC850"
-                        },
-                        fuel_type:{
-                            type:'string',
-                            example:"Hybrid"
+                            example:"It is made up of jawar"
                         }
-                    },
+                    }
+                },
+                locations:{
+                    required:[
+                        "city_name",
+                        "locationName",
+                        "description",
+                        "time"
+                    ],
+                    type:"object",
+                    properties:{
+                        city_name:{
+                            type:'string',
+                            example:"Kalaburgi"
+                        },
+                        locationName:{
+                            type:'string',
+                            example:"Temple"
+                        },
+                        description:{
+                            type:'string',
+                            example:"Hindu temple"
+                        },
+                        time:{
+                            type:'number',
+                            example:120
+                        }
+                    }
                 }
             },
             requetBodies:{
@@ -330,16 +537,6 @@ const options = {
                         'application/json':{
                             schema:{
                                 $ref: '#/components/schemas/cities'
-                            }
-                        }
-                    }
-                },
-                cars:{
-                    description:"Car object that needs to be added to the server",
-                    content:{
-                        'application/json':{
-                            schema:{
-                                $ref: '#/components/schemas/cars'
                             }
                         }
                     }
