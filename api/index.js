@@ -1,17 +1,17 @@
-require('./connectiondb');
+require('../connectiondb');
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
-const city = require('./schemas/cityschema');
-const User = require('./schemas/userschema');
-const Food = require('./schemas/foodschema');
-const { oneDayTravel, twoDayTravel, threeDayTravel } = require('./controllers/dayPlans');
+const city = require('../schemas/cityschema');
+const User = require('../schemas/userschema');
+const Food = require('../schemas/foodschema');
+const { oneDayTravel, twoDayTravel, threeDayTravel } = require('../controllers/dayPlans');
 const swaggerUi = require('swagger-ui-express');
-const { swaggerDocs } = require('./swagger');
-const { addReview, getReview } = require('./controllers/reviewcontroller');
-const { addfood, getfood } = require('./controllers/foodcontroller');
-const { addPlace, getPlace } = require('./controllers/locationscontroller');
-require('./controllers/reviewcontroller');
+const { swaggerDocs } = require('../swagger');
+const { addReview, getReview } = require('../controllers/reviewcontroller');
+const { addfood, getfood } = require('../controllers/foodcontroller');
+const { addPlace, getPlace } = require('../controllers/locationscontroller');
+require('../controllers/reviewcontroller');
 const fs = require('fs');
 const path = require('path');
 const { render } = require('ejs');
@@ -19,13 +19,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { resourceLimits } = require('worker_threads');
-const Person = require('./schemas/Person');
+const Person = require('../schemas/Person');
 const flash = require('connect-flash');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
-const { sendVerificationEmail, sendSuccessEmail } = require('./controllers/email');
+const { sendVerificationEmail, sendSuccessEmail } = require('../controllers/email');
 // import { generateVerificationToken } from './controllers/email';
-const {generateVerificationToken} = require('./controllers/email');
+const {generateVerificationToken} = require('../controllers/email');
 
 // Middlewares
 app.use(express.json());
@@ -41,16 +41,6 @@ app.use(flash());
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname,'public')));
-
-app.use((req,res,next)=>{
-    console.log("This is 1st Middleware");
-    fs.appendFile('log.txt',
-        `\n "Date"=${Date.now()}\t"IP"=${req.ip}\t"Method"=${req.method}\t"API"=${req.path} \t"Params"=${req.params}`,
-        (err,data)=>{
-            next();
-        }
-    )
-});
 
 app.use('/city',(req,res,next)=>{
     console.log("This is 2nd Middleware");
@@ -249,10 +239,10 @@ app.post('/login',async(req,res)=>{
     
         // To login as admin or user
         const adminName = await User.findOne({email:req.body.email});
-        if (adminName && adminName.username === "admin") {
+        if (adminName.username === "admin") {
             await bcrypt.compare(req.body.password, adminName.password, (err,result)=>{
                 if(result){
-                    const ADtoken = jwt.sign({email:adminName.email},"admin",{ expiresIn: '30m' });
+                    const ADtoken = jwt.sign({email:adminName.email},"admin",{ expiresIn: '10m' });
                     res.cookie("admin",ADtoken);
                     res.redirect('/AdminPanel');
                 }
@@ -263,7 +253,7 @@ app.post('/login',async(req,res)=>{
         
             await bcrypt.compare(req.body.password, user.password, (err,result)=>{
                 if(result){
-                    const token = jwt.sign({email:user.email}, "balleballe",{ expiresIn: '1h' });
+                    const token = jwt.sign({email:user.email}, "balleballe",{ expiresIn: '15m' });
                     res.cookie("token", token,);
                     res.redirect('/UserPanel');
                 }

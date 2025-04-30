@@ -2,10 +2,9 @@
     "version": 2,
     "public": true,
     "rewrites": [
-      {
+        {
         "source": "/(.*)",
-        "destination": "/"
-      }
-    ],
-    "redirects": [{ "source": "/", "destination": "/", "permanent": false }]
-  }
+        "destination": "/api"
+        }
+    ]
+}
