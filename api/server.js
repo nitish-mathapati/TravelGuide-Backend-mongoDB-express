@@ -26,6 +26,7 @@ const nodemailer = require('nodemailer');
 const { sendVerificationEmail, sendSuccessEmail } = require('../controllers/email');
 // import { generateVerificationToken } from './controllers/email';
 const {generateVerificationToken} = require('../controllers/email');
+require('dotenv').config();
 
 // Middlewares
 app.use(express.json());
@@ -540,7 +541,7 @@ app.get('/city/threedaysplan/:city_name',threeDayTravel);
 // });
 
 app.use('/api_docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-app.listen(2025,()=>{
-    console.log("Successfully connected to port: 2025");
+const PORT = process.env.PORT
+app.listen(PORT,()=>{
+    console.log(`Successfully connected to port: ${PORT}`);
 });

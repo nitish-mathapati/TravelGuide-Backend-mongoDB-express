@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-mongoose.connect("mongodb://localhost:27017/maindatabase").then(()=>{
+mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log('Connected successfully to database')
-}).catch(()=>{
-    console.log("Could not connect to database")
+}).catch((error)=>{
+    console.log("Could not connect to database",error.message);
 });
