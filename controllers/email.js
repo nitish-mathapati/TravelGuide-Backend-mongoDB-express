@@ -2,18 +2,19 @@ const nodemailer = require('nodemailer');
 const User = require('../schemas/userschema');
 const bcrypt =require('bcrypt');
 const { text } = require('body-parser');
+require('dotenv').config();
 
 exports.sendVerificationEmail = ( email,username,token ) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth:{
-            user:'ntshmathapati2003@gmail.com',
-            pass: 'kpld mvpu pdfh mceo'
+            user:process.env.USER,
+            pass: process.env.PASS
         }
     });
 
     const mailOption = {
-        from: 'ntshmathapati2003@gmail.com',
+        from: process.env.USER,
         to: email,
         subject: 'Email verification',
         // text: `Dear ${username}, \n\nCongratulations on signing up! We’re excited to have you onboard.\n\nBest Regards,\nNitish Mathapati`
@@ -36,13 +37,13 @@ exports.sendSuccessEmail = ( email,username ) =>{
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth:{
-            user: 'ntshmathapati2003@gmail.com',
-            pass: 'kpld mvpu pdfh mceo'
+            user:process.env.USER,
+            pass: process.env.PASS
         }
     });
 
     const mailOption = {
-        from: 'ntshmathapati2003@gmail.com',
+        from: process.env.USER,
         to: email,
         subject: 'Congratulations on Verifying Your Email!',
         html: `<p>Dear ${username},</p>
